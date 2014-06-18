@@ -1,8 +1,10 @@
 <form role="form" class="form-signin" ng-submit="ok()">
-	<h1 class="form-signin-heading fade-out-drop" cdb-fx="removeClass,fade-out-drop,.1">Welcome to breakdown.</h1>
-	<h2 class="form-signin-heading fade-out-drop" cdb-fx="removeClass,fade-out-drop,.7">What's your name?</h2>
-	<div class="form-group fade-out-drop" cdb-fx="removeClass,fade-out-drop,.75">
-		<input type="text" autofocus="" required="" placeholder="" class="form-control input-breakdown" ng-model="user.name">
+	<h1 class="form-signin-heading fade-out-drop" cdb-fx="removeClass:fade-out-drop,after:.1">Welcome to breakdown.</h1>
+	<h2 class="form-signin-heading fade-out-drop" cdb-fx="removeClass:fade-out-drop,after:.7">What's your name?</h2>
+	<div class="form-group fade-out-drop" cdb-fx="removeClass:fade-out-drop,after:.75">
+		<input type="text" autofocus="" required="" placeholder="" class="form-control input-breakdown"
+			   ng-model="user.name">
 	</div>
-	<button type="submit" class="btn btn-lg btn-breakdown btn-block fade-out-drop" cdb-fx="removeClass,fade-out-drop,.8">Ok</button>
+	<button type="submit" class="btn btn-lg btn-breakdown btn-block animate" ng-class="{'fade-out-drop':!user.name}"
+			>Ok</button>
 </form>
