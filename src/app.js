@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	angular.module('breakdown', ['ui.bootstrap', 'ngRoute', 'ngCookies'])
+	angular.module('breakdown', ['ui.bootstrap', 'ngRoute', 'ngCookies', 'ngAnimate'])
 		.config(['$routeProvider', function($routeProvider) {
 			$routeProvider.when('/', {
 				templateUrl: 'login.html',
@@ -13,9 +13,34 @@
 			});
 			$routeProvider.when('/node', {
 				templateUrl: 'breakdown.html',
-				controller: 'node'
+				controller: 'breakdown'
 			});
 			$routeProvider.otherwise({redirectTo: '/'});
+		}])
+		.factory('Node', ['$http', '$q', function($http, $q) {
+
+			return {
+				get: function(id) {
+					var url = 'api/node',
+						deferred = $q.defer();
+					if (id !== undefined) {
+						url += '/' + id;
+					}
+					$http.get(url)
+						.success(function(data) {
+							deferred.resolve(data);
+						});
+					return deferred.promise;
+				},
+				post: function(node) {
+					var deferred = $q.defer();
+					$http.post('api/node', node)
+						.success(function(data) {
+							deferred.resolve(data);
+						});
+					return deferred.promise;
+				}
+			};
 		}])
 		.factory('User', ['$http', '$q', '$cookieStore', function($http, $q, $cookies) {
 			var user = {};
@@ -81,18 +106,52 @@
 				});
 			};
 		}])
-		.controller('node', ['$scope', '$location', 'User', function($scope, $location, User) {
+		.controller('navigation', ['$scope', '$location', 'User', function($scope, $location, User) {
+
 			User.getUser().then(function(user) {
-				if (!user._id) {
-					$location.path('/');
-				}
 				$scope.user = user;
 			});
 
 			$scope.logout = function() {
 				User.logout();
 				$location.path('/');
+			};
+		}])
+		.controller('breakdown', ['$scope', 'Node', function($scope, Node) {
+			$scope.nodes = [];
 
+			$scope.addNode = function() {
+				Node.post().then(function(node) {
+					$scope.nodes.push(node);
+				});
+			};
+		}])
+		.directive('cdbNode', 'Node', [function(Node) {
+
+			return {
+				restrict: 'EA',
+				scope: '=cdbNode',
+				templateUrl: 'node-template.html',
+				link: function(scope, elem, attr) {
+					scope.$on("node-removed:" + scope.node._id, function() {
+						angular.forEach(scope.$parent.nodes, function(node, index) {
+							if (node._id === scope.node._id) {
+								console.log("this guy is gone.");
+								scope.$parent.nodes.splice(index, -1);
+							}
+						});
+					});
+
+					scope.remove = function() {
+						scope.$broadcast("node-removed:" + scope.node._id);
+					};
+
+					scope.addNode = function() {
+						Node.post().then(function(node) {
+							scope.nodes.push(node);
+						});
+					};
+				}
 			};
 		}])
 	/**
@@ -111,19 +170,18 @@
 							case "removeClass":
 								return function() {
 									element.removeClass(effectParams[1]);
-								}
+								};
 							default:
 								console.error("Effect " + effectParams[0] + " is not defined.");
 								break;
 						}
-					};
+					}
 
 					element.addClass("animate");
 
-					angular.forEach(attributes.cdbFx.split(";"), function(effect) {
-						var options = effect.split(",");
-
-						var effect = effects(options[0].split(":"))
+					angular.forEach(attributes.cdbFx.split(";"), function(rawEffect) {
+						var options = rawEffect.split(","),
+							effect = effects(options[0].split(":"));
 
 						//trigger
 						var triggerParams = options[1].split(':') || [null];
@@ -132,7 +190,7 @@
 								setTimeout(effect, parseFloat(triggerParams[1]) * 1000);
 								break;
 							case 'on':
-								scope.$on(triggerParams[1], effect)
+								scope.$on(triggerParams[1], effect);
 								break;
 							default:
 								effect();
@@ -140,6 +198,6 @@
 						}
 					});
 				}
-			}
+			};
 		}]);
 })();

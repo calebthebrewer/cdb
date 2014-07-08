@@ -1,6 +1,6 @@
-<div>
-	Hi {{user.name}}
-</div>
-<button type="button" class="btn btn-lg btn-breakdown btn-block" ng-click="logout()">Logout</button>
-<!--
-<node src="node-data.json" template="node-template.html"></node>-->
+<ul class="node-list">
+	<li class="animate-repeat" ng-repeat="node in nodes">
+		<div cdb-node="node"></div>
+	</li>
+</ul>
+<button ng-click="addNode()" class="btn btn-primary">+</button>

@@ -1,4 +1,5 @@
-<div class="node-inner">
-	<div>{{data.label}}</div>
-	<span>{{data.city}}</span>
+<div class="node-inner" id="{{node._id}}">
+	<h4>{{node.label}}</h4>
+	<p>{{node.content}}</p>
+	<button class="btn btn-danger" ng-click="remove()"><span class="glyphicon glyphicon-trash"></span></button>
 </div>
