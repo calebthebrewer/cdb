@@ -1,5 +1,10 @@
 <div class="node-inner" id="{{node._id}}">
 	<h4>{{node.label}}</h4>
 	<p>{{node.content}}</p>
+	<button ng-click="addNode()" class="btn btn-primary">+</button>
 	<button class="btn btn-danger" ng-click="remove()"><span class="glyphicon glyphicon-trash"></span></button>
+	<ul class="node-list">
+		<li class="animate-repeat" ng-repeat="childNode in node.nodes" cdb-node="childNode">
+		</li>
+	</ul>
 </div>
