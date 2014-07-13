@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	angular.module('breakdown', ['ui.bootstrap', 'ngRoute', 'ngCookies', 'ngAnimate'])
+	angular.module('breakdown', ['ui.bootstrap', 'ngRoute', 'ngCookies', 'ngAnimate', 'ui.tree'])
 		.config(['$routeProvider', function($routeProvider) {
 			$routeProvider.when('/', {
 				templateUrl: 'login.html',
@@ -118,42 +118,89 @@
 			};
 		}])
 		.controller('breakdown', ['$scope', 'Node', function($scope, Node) {
-			$scope.nodes = [];
 
-			$scope.addNode = function() {
-				Node.post().then(function(node) {
-					$scope.nodes.push(node);
+			$scope.remove = function(scope) {
+				scope.remove();
+			};
+
+			$scope.addNode = function(scope) {
+				var nodeData = scope.$modelValue;
+				nodeData.items.push({
+					id: nodeData.id * 10 + nodeData.items.length,
+					title: scope.nodeName,
+					items: []
 				});
+				scope.nodeName = '';
 			};
-		}])
-		.directive('cdbNode', 'Node', [function(Node) {
 
-			return {
-				restrict: 'EA',
-				scope: '=cdbNode',
-				templateUrl: 'node-template.html',
-				link: function(scope, elem, attr) {
-					scope.$on("node-removed:" + scope.node._id, function() {
-						angular.forEach(scope.$parent.nodes, function(node, index) {
-							if (node._id === scope.node._id) {
-								console.log("this guy is gone.");
-								scope.$parent.nodes.splice(index, -1);
+			Node.get('5678').then(function(data) {
+				$scope.items = data;
+			});
+		}])
+		.directive('cdbNode', [
+			'$http',
+			'$compile',
+			'Node',
+			function($http, $compile, Node) {
+
+				return {
+					restrict: 'EA',
+					scope: {
+						node: "=cdbNode"
+					},
+					compile: function(elem, attr) {
+						var templateUrl = 'node.tpl.html';
+
+						function linker(scope, elem, attr) {
+							scope.$watchCollection('[node, node.nodes]', function(newNode, oldNode) {
+								if (newNode[0] !== oldNode[0]) {
+									linker(scope, elem, attr);
+								}
+							});
+
+							if (!scope.node) {
+								elem.html('');
+								return;
 							}
-						});
-					});
 
-					scope.remove = function() {
-						scope.$broadcast("node-removed:" + scope.node._id);
-					};
+							$http.get(templateUrl).then(function(template) {
+								elem.replaceWith($compile(template.data)(scope));
+							});
 
-					scope.addNode = function() {
-						Node.post().then(function(node) {
-							scope.nodes.push(node);
-						});
-					};
-				}
-			};
-		}])
+							scope.$on('remove-node:' + scope.node._id, function() {
+								console.log('removing node ' + scope.node._id);
+							});
+
+							scope.remove = function() {
+								if (scope.$parent.removeNode !== undefined) {
+									elem.remove();
+									scope.$parent.removeNode(scope.node._id);
+								}
+							};
+
+							scope.addNode = function() {
+								Node.post().then(function(node) {
+									scope.node.nodes.push(node);
+								});
+							};
+
+							scope.removeNode = function(id) {
+								console.log('explicitly remove node ' + id);
+
+								for (var i = scope.node.nodes.length - 1; i >= 0; i--) {
+									if (scope.node.nodes[i]._id === id) {
+										scope.node.nodes.splice(i, 1);
+									}
+								}
+							};
+						}
+
+						return {
+							post: linker
+						};
+					}
+				};
+			}])
 	/**
 	 * action:parameter,trigger:value[;effect;effect...]
 	 */
@@ -167,21 +214,21 @@
 					//effects
 					function effects(effectParams) {
 						switch (effectParams[0]) {
-							case "removeClass":
+							case 'removeClass':
 								return function() {
 									element.removeClass(effectParams[1]);
 								};
 							default:
-								console.error("Effect " + effectParams[0] + " is not defined.");
+								console.error('Effect ' + effectParams[0] + ' is not defined.');
 								break;
 						}
 					}
 
-					element.addClass("animate");
+					element.addClass('animate');
 
-					angular.forEach(attributes.cdbFx.split(";"), function(rawEffect) {
-						var options = rawEffect.split(","),
-							effect = effects(options[0].split(":"));
+					angular.forEach(attributes.cdbFx.split(';'), function(rawEffect) {
+						var options = rawEffect.split(','),
+							effect = effects(options[0].split(':'));
 
 						//trigger
 						var triggerParams = options[1].split(':') || [null];

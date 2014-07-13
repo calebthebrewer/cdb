@@ -1,6 +1,10 @@
-<ul class="node-list">
-	<li class="animate-repeat" ng-repeat="node in nodes">
-		<div cdb-node="node"></div>
-	</li>
-</ul>
-<button ng-click="addNode()" class="btn btn-primary">+</button>
+<form ng-submit="addNode(this)" class="form-inline">
+	<input type="text" class="form-control" ng-model="nodeName">
+	<input type="submit" class="btn btn-primary" value="Add Root Node">
+</form>
+<div ui-tree>
+	<ol ui-tree-nodes="" ng-model="items" id="tree-root">
+		<li class="node" ng-repeat="node in items" ui-tree-node
+			ng-include="'node.tpl.html'"></li>
+	</ol>
+</div>

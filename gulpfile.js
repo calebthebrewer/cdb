@@ -28,10 +28,12 @@ var srcDir = 'src/',
 		'bower_components/angular-cookies/angular-cookies.min.js',
 		'bower_components/angular-animate/angular-animate.min.js',
 		'bower_components/angular-mocks/angular-mocks.js',
-		'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
+		'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+		'bower_components/angular-ui-tree/dist/angular-ui-tree.min.js'
 	],
 	vendorCssFiles = [
-		'bower_components/bootstrap/dist/css/bootstrap.min.css'
+		'bower_components/bootstrap/dist/css/bootstrap.min.css',
+		'bower_components/angular-ui-tree/dist/angular-ui-tree.min.css'
 	],
 	fontFiles = [
 		'bower_components/bootstrap/dist/fonts/*'
