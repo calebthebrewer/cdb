@@ -9,15 +9,20 @@
 		node = [
 			{
 				id: 5678,
-				title: 'This Node',
+				title: 'Bob',
 				content: 'Some information about this node. It could be a lot of information.',
-				items: []
-			},
-			{
-				id: 5679,
-				title: 'That Node',
-				content: 'Here we go!',
-				items: []
+				layout: 'vertical',
+				template: 'cdb-nodes/default/tpl.html',
+				items: [
+					{
+						id: 5679,
+						title: 'This node'
+					},
+					{
+						id: 5670,
+						title: 'You node!'
+					}
+				]
 			}
 		];
 

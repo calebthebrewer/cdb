@@ -12,15 +12,20 @@ var csslint = require('gulp-csslint'),
 	clean = require('gulp-clean'),
 	eventStream = require('event-stream'),
 	concat = require('gulp-concat'),
-	merge = require('merge-stream');
+	merge = require('merge-stream')
+	html2js = require('gulp-html2js');
 //globs
 var srcDir = 'src/',
 	distDir = 'dist/',
-	sassFiles = srcDir + 'app.scss',
+	sassFiles = srcDir + '**/*.scss',
 	jsFiles = srcDir + 'app.js',
 	mockJsFiles = srcDir + 'app.mock.js',
 	htmlFiles = [
-		srcDir + '**/*.html'
+		srcDir + '**/*.html',
+		'!' + srcDir + 'cdb-nodes/**/*.html'
+	],
+	htmlTplFile = [
+		srcDir + 'cdb-nodes/**/*.html'
 	],
 	vendorJsFiles = [
 		'bower_components/angular/angular.min.js',
@@ -45,17 +50,18 @@ var isProd = false;
 //tasks
 gulp.task('default', ['watch']);
 
-gulp.task('dev', ['vendor', 'html', 'js-dev', 'sass']);
+gulp.task('dev', ['vendor', 'html', 'js-dev', 'sass', 'tpl']);
 
 gulp.task('prod', function() {
 	isProd = true;
-	runSeq(['vendor', 'html', 'js-prod', 'sass']);
+	runSeq(['dev']);
 });
 
 gulp.task('watch', ['dev'], function() {
 	gulp.watch(sassFiles, ['sass']);
 	gulp.watch([jsFiles, mockJsFiles], ['js-dev']);
 	gulp.watch(htmlFiles, ['html']);
+	gulp.watch(htmlTplFile, ['tpl']);
 });
 
 gulp.task('clean', function() {
@@ -68,6 +74,7 @@ gulp.task('sass', function() {
 		.pipe(sass())
 		.pipe(csslint())
 		.pipe(csslint.reporter())
+		.pipe(concat("app.css"))
 		.pipe(gulpIf(isProd, minifyCss()))
 		.pipe(gulp.dest(distDir));
 });
@@ -85,6 +92,17 @@ gulp.task('js-prod', function() {
 		.pipe(uglify())
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest(distDir));
+});
+
+gulp.task('tpl', function() {
+	return gulp.src(htmlTplFile)
+		.pipe(html2js({
+			outputModuleName: 'cdb-nodes-templates',
+			base: 'src/'
+		}))
+		.pipe(concat('templates.js'))
+		.pipe(gulpIf(isProd, uglify()))
+		.pipe(gulp.dest(distDir + 'cdb-nodes/')); //Output folder
 });
 
 gulp.task('html', function() {

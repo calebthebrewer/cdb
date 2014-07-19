@@ -16,7 +16,8 @@
     "gulp-watch": "~0.6.4",
     "gulp": "~3.6.2",
     "run-sequence": "~0.3.6",
-    "merge-stream": "~0.1.1"
+    "merge-stream": "~0.1.1",
+    "gulp-html2js": "~0.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

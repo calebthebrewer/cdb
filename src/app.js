@@ -1,18 +1,24 @@
 (function() {
 	'use strict';
 
-	angular.module('breakdown', ['ui.bootstrap', 'ngRoute', 'ngCookies', 'ngAnimate', 'ui.tree'])
+	angular.module('breakdown', [
+		'ui.bootstrap',
+		'ngRoute',
+		'ngCookies',
+		'ngAnimate',
+		'ui.tree',
+		'cdb-nodes-templates'])
 		.config(['$routeProvider', function($routeProvider) {
 			$routeProvider.when('/', {
-				templateUrl: 'login.html',
+				templateUrl: 'views/login.html',
 				controller: 'login'
 			});
 			$routeProvider.when('/home', {
-				templateUrl: 'home.html',
+				templateUrl: 'views/home.html',
 				controller: 'home'
 			});
 			$routeProvider.when('/node', {
-				templateUrl: 'breakdown.html',
+				templateUrl: 'views/breakdown.html',
 				controller: 'breakdown'
 			});
 			$routeProvider.otherwise({redirectTo: '/'});

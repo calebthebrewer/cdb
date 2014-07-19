@@ -1,0 +1,6 @@
+<div ui-tree="options">
+	<div ui-tree-nodes ng-model="items" id="tree-root">
+		<div class="root-node" ng-repeat="node in items" ui-tree-node
+			ng-include="'cdb-nodes/user/tpl.html'"></div>
+	</div>
+</div>

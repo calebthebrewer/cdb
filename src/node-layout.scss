@@ -1,0 +1,16 @@
+.cdb-node-list {
+	list-style: none outside none;
+	margin-top: 10px;
+}
+
+.cdb-node {
+
+	&.vertical {
+		display: block;
+		margin-bottom: 10px;
+	}
+	&.horizontal {
+		display: inline-block;
+		margin-right: 10px;
+	}
+}
