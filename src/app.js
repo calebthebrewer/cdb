@@ -140,73 +140,9 @@
 			};
 
 			Node.get('5678').then(function(data) {
-				$scope.items = data;
+				$scope.nodes = data;
 			});
 		}])
-		.directive('cdbNode', [
-			'$http',
-			'$compile',
-			'Node',
-			function($http, $compile, Node) {
-
-				return {
-					restrict: 'EA',
-					scope: {
-						node: "=cdbNode"
-					},
-					compile: function(elem, attr) {
-						var templateUrl = 'node.tpl.html';
-
-						function linker(scope, elem, attr) {
-							scope.$watchCollection('[node, node.nodes]', function(newNode, oldNode) {
-								if (newNode[0] !== oldNode[0]) {
-									linker(scope, elem, attr);
-								}
-							});
-
-							if (!scope.node) {
-								elem.html('');
-								return;
-							}
-
-							$http.get(templateUrl).then(function(template) {
-								elem.replaceWith($compile(template.data)(scope));
-							});
-
-							scope.$on('remove-node:' + scope.node._id, function() {
-								console.log('removing node ' + scope.node._id);
-							});
-
-							scope.remove = function() {
-								if (scope.$parent.removeNode !== undefined) {
-									elem.remove();
-									scope.$parent.removeNode(scope.node._id);
-								}
-							};
-
-							scope.addNode = function() {
-								Node.post().then(function(node) {
-									scope.node.nodes.push(node);
-								});
-							};
-
-							scope.removeNode = function(id) {
-								console.log('explicitly remove node ' + id);
-
-								for (var i = scope.node.nodes.length - 1; i >= 0; i--) {
-									if (scope.node.nodes[i]._id === id) {
-										scope.node.nodes.splice(i, 1);
-									}
-								}
-							};
-						}
-
-						return {
-							post: linker
-						};
-					}
-				};
-			}])
 	/**
 	 * action:parameter,trigger:value[;effect;effect...]
 	 */

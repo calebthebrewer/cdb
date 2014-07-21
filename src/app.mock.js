@@ -13,7 +13,7 @@
 				content: 'Some information about this node. It could be a lot of information.',
 				layout: 'vertical',
 				template: 'cdb-nodes/default/tpl.html',
-				items: [
+				nodes: [
 					{
 						id: 5679,
 						title: 'This node'

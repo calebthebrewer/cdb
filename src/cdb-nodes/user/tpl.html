@@ -4,7 +4,7 @@
 		<select ng-model="node.layout">
 			<option value="vertical">Vertical</option>
 			<option value="horizontal">Horizontal</option>
-			<option value="grid">Grid</option>
+			<option value="four-square">Four Square</option>
 		</select>
 		<select ng-model="node.template">
 			<option value="cdb-nodes/default/tpl.html">Default</option>
@@ -12,9 +12,10 @@
 		</select>
 		<span class="glyphicon glyphicon-trash"></span>
 	</div>
-	<ul class="cdb-node-list" ui-tree-nodes="options" ng-model="node.items">
-		<li ng-repeat="item in node.items"
-			class="cdb-node {{node.layout}}"
-			ui-tree-node ng-include="node.template"></li>
+	<ul class="cdb-node-list" ui-tree-nodes ng-model="node.nodes" ng-init="template=node.template;layout=node.layout">
+		<li class="cdb-node {{layout}}"
+			ng-include="template"
+			ng-repeat="node in node.nodes track by node.id"
+			ui-tree-node ></li>
 	</ul>
 </div>

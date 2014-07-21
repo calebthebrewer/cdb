@@ -12,5 +12,11 @@
 	&.horizontal {
 		display: inline-block;
 		margin-right: 10px;
+		margin-bottom: 10px;
+	}
+	&.four-square {
+		display: inline-block;
+		width: 50%;
+		height: 50%;
 	}
 }
