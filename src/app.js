@@ -130,11 +130,12 @@
 			};
 
 			$scope.addNode = function(scope) {
-				var nodeData = scope.$modelValue;
-				nodeData.items.push({
-					id: nodeData.id * 10 + nodeData.items.length,
-					title: scope.nodeName,
-					items: []
+				var node = scope.$modelValue;
+				if (node.nodes === undefined) node.nodes = [];
+				node.nodes.push({
+					id: node.id * 10 + node.nodes.length,
+					title: node.title + " child " + (node.nodes.length + 1),
+					nodes: []
 				});
 				scope.nodeName = '';
 			};

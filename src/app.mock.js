@@ -12,7 +12,7 @@
 				title: 'Bob',
 				content: 'Some information about this node. It could be a lot of information.',
 				layout: 'vertical',
-				template: 'cdb-nodes/default/tpl.html',
+				template: 'cdb-nodes/default/default.html',
 				nodes: [
 					{
 						id: 5679,

@@ -1,0 +1,21 @@
+<div class="cdb-node-default">
+	<h1 ui-tree-handle>{{node.title}}</h1>
+
+	<form class="form-inline">
+		<div class="form-group pull-right">
+			<button type="button" class="btn btn-default" ng-click="addNode(this)">
+				<span class="glyphicon glyphicon-plus"></span>
+			</button>
+			<button type="button" class="btn btn-default" ng-click="remove()">
+				<span class="glyphicon glyphicon-trash"></span>
+			</button>
+		</div>
+	</form>
+	<p>Some content should go here: {{node.content}}</p>
+	<ul class="cdb-node-list" ui-tree-nodes ng-model="node.nodes">
+		<li class="cdb-node vertical"
+			ng-include="template"
+			ng-repeat="node in node.nodes"
+			ui-tree-node></li>
+	</ul>
+</div>

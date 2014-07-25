@@ -1,0 +1,22 @@
+<div class="cdb-node-user" ng-init="template=node.template;layout=node.layout">
+	<h2 ui-tree-handle class="user-name">{{node.title}}</h2>
+	<form class="form-inline">
+		<div class="form-group">
+			<label for="layout-{{node.id}}">Node Layout</label>
+			<select id="layout-{{node.id}}" ng-model="layout" class="form-control">
+				<option value="vertical">Vertical</option>
+				<option value="horizontal">Horizontal</option>
+				<option value="four-square">Four Square</option>
+			</select>
+		</div>
+		<button type="button" class="btn btn-default pull-right" ng-click="addNode(this)">
+			<span class="glyphicon glyphicon-plus"></span>
+		</button>
+	</form>
+	<ul class="cdb-node-list" ui-tree-nodes ng-model="node.nodes">
+		<li class="cdb-node {{layout}}"
+			ng-include="template"
+			ng-repeat="node in node.nodes"
+			ui-tree-node ></li>
+	</ul>
+</div>
